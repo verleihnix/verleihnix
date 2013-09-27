@@ -1,0 +1,28 @@
+@(notice: BoardNotice, loggedInUser: Benutzer)
+@import models.NoticeTyp
+@import helper._
+@main(notice.item.titel + " - Verleihnix"){
+
+    <div class="ym-gbox">
+        <h2>@if(notice.typ == NoticeTyp.Suchen){Gesucht: }else{Angeboten: }@notice.item.titel</h2><br>
+        <p>
+        @if(notice.typ == NoticeTyp.Suchen){
+            <b>gesucht von:</b>   @notice.owner  <a href="@routes.Messaging.writeMessageNotice(notice.id,notice.owner.id)" > kontaktieren </a>
+        } else {
+            <b>angeboten von:</b> @notice.owner <a href="@routes.Messaging.writeMessageNotice(notice.id,notice.owner.id)" > kontaktieren </a>
+        }
+        </p>
+        <p><b>Beschreibung:</b> @notice.getBeschreibung()</p>
+        <p><b>Bemerkung:</b> @notice.kommentar</p>
+        @*Bearbeiten funktioniert noch nicht einwandfrei, daher ausgeblendet*@
+        @*
+        @if(notice.owner == loggedInUser){
+            <p>
+            @form(routes.BoardNotices.bearbeiten(notice.id)) {
+                <input type="submit" value="Bearbeiten" />
+            }
+            </p>
+        }
+        *@
+    </div>
+}

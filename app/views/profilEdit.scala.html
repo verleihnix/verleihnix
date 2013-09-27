@@ -1,0 +1,35 @@
+@(user: Benutzer , editForm : Form[Benutzer])
+@import securesocial.core.IdentityProvider
+@import Http.Context.Implicit
+
+@main("Profil-Einstellungen - Verleihnix")  {
+
+<h2>Profil-Einstellungen</h2>
+
+    @* beim einstellungen ändern ist etwas schiefgegangen, daher error flashen*@
+    @if(flash.contains("error")) {
+        @message(flash.get("error"),"error")
+    }
+
+<p>Hier kannst du deinen Account einstellen</p>
+   @user.passwordInfo.map { info =>
+        <a class="btn" href="@securesocial.core.providers.utils.RoutesHelper.changePasswordPage.absoluteURL(Implicit.request(), IdentityProvider.sslEnabled )">Passwort ändern</a>
+    }
+
+
+    @helper.form(action = routes.Profil.submitProfileChange ) {
+        @helper.inputText(editForm("name"),'_label -> "Name:")
+        @helper.inputText(editForm("vorname"), '_label -> "Vorname:")
+        @helper.inputDate(editForm("geburtsdatum"), '_label -> ("Geburtsdatum (Jahr-Monat-Tag):"))
+        @helper.inputText(editForm("email"), '_label -> "E-Mail-Adresse:" , '_help ->  "" )    @*  ('_help -> "") versteckt das durch die validation enstandene html *@
+        @helper.inputText(editForm("wohnort"), '_label -> "Wohnort:")
+        @helper.inputText(editForm("plz.plz"), '_label -> "Plz:")
+
+
+        <input type="submit" value="Übernehmen">
+    }
+
+
+
+}
+

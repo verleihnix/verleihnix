@@ -1,0 +1,97 @@
+# Messages
+# This file overides Messages and specifies new ones.
+# ~~~~
+
+#Localize Default Messages
+
+# --- Constraints
+constraint.required=Erforderlich
+constraint.min=Minimum value: {0}
+constraint.max=Maximum value: {0}
+constraint.minLength=Minimale Länge: {0}
+constraint.maxLength=Maximale Länge: {0}
+constraint.email=Email
+
+# --- Formats
+format.date=dd.MM.yy
+format.numeric=Numeric
+format.real=Real
+
+# --- Errors
+error.invalid=Ungültiger Wert
+error.required=Das Feld darf nicht leer sein
+error.number=Nur Zahlen erlaubt
+error.real=Nur eine Kommazahlen erlaubt
+error.real.precision=Nur Kommazahlen mit nicht mehr als {0} Ziffern mit {1} Nachkommastellen erlaubt
+error.min=Muss größer oder gleich sein wie {0}
+error.min.strict=Muss größter sein als {0}
+error.max=Muss kleiner oder gleich sein wie {0}
+error.max.strict=Muss kleiner sein als {0}
+error.minLength=Minimale Länge ist {0}
+error.maxLength=Maximale Länge ist {0}
+error.email=Email ist ungültig
+error.pattern=Muss folgende Regel erfüllen: {0}
+
+# Login page
+securesocial.login.title=Login
+securesocial.login.headerTitle=Login - Verleihnix
+securesocial.login.instructions=Benutzen Sie einen ihrer Accounts von einem der Folgenden Anbieter.
+securesocial.login.accessDenied=Sie haben den Zugriff auf Ihren Account verweigert. Damit Sie sich einlogen können, müssen Sie den Zugriff erlauben
+securesocial.login.errorLoggingIn=Es ist ein Fehler beim Einlogen aufgetreten. Bitte Versuchen sie es nochmal.
+securesocial.login.useEmailAndPassword=oder mit Email und Passwort einlogen
+securesocial.login.useEmailAndPasswordOnly=Mit Email und Passwort einlogen
+securesocial.login.signUp=Wenn Sie noch kein Konto haben, können Sie sich
+securesocial.login.here=hier registrieren.
+securesocial.login.invalidCredentials=Die eingegebene Email oder das Passwort ist falsch. Bitte überprüfen Sie Ihre Eingaben.
+securesocial.login.forgotPassword=Passwort vergessen?
+
+# Sign up page
+securesocial.signup.title=Registrierung
+securesocial.signup.username=Benutzername
+securesocial.signup.firstName=Vorname
+securesocial.signup.lastName=Nachname
+securesocial.signup.email1=Email
+securesocial.signup.email2=Email wiederholen
+securesocial.signup.password1=Passwort
+securesocial.signup.password2=Passwort wiederholen
+securesocial.signup.createAccount=Account erstellen
+securesocial.signup.cancel=Abrechen
+securesocial.signup.userNameAlreadyTaken=Benutzername bereits vergeben
+securesocial.signup.passwordsDoNotMatch=Die Passwörter stimmen nicht überein!
+securesocial.signup.thankYouCheckEmail=Prüfen Sie ihre Email um die Anmeldung fortzusetzen
+securesocial.signup.invalidLink=Der Link ist ungültig
+securesocial.signup.signUpDone=Danke für die Anmeldung. Sie können sich jetzt einlogen
+securesocial.signup.invalidPassword=Passwort muss mindestens {0} Zeichen lang sein
+
+# Password reset
+securesocial.password.title=Passwort Zurücksetzen
+securesocial.password.passwordUpdated=Ihr Passwort wurde erfolgreich geändert
+securesocial.password.reset=Passwort Zrücksetzen
+securesocial.password.error=Es gab einen Fehler beim Zurücksetzen des Passworts. Bitte Versuche Sie es nochmal
+
+# Password change
+securesocial.passwordChange.title=Passwort Ändern
+securesocial.passwordChange.currentPassword=Altes Passwort
+securesocial.passwordChange.newPassword1=Neues Passwort
+securesocial.passwordChange.newPassword2=Neues Passwort wiederholen
+securesocial.passwordChange.changeButton=Ändern
+securesocial.passwordChange.invalidPassword=Ungültiges Passwort
+securesocial.passwordChange.ok=Passwort wurde erfolgreich geändernt
+securesocial.passwordChange.okButton=Ok
+
+# Not authorized page
+securesocial.notAuthorized.title=Zugriff Verweigert
+securesocial.notAuthorized.message=Sie haben keine Zugriffsberechtigung für diese Seite.
+
+#
+securesocial.loginRequired=Sie müssen eingelogt sein, um auf diese Seite zuzugreifen.
+
+# Mails
+#
+mails.sendAlreadyRegisteredEmail.subject=Bereits Angemeldet
+mails.sendSignUpEmail.subject=Anmeldung Bestätigen
+mails.welcomeEmail.subject=Willkomen bei Verleinix
+mails.passwordResetEmail.subject=Passwort Zurücksetzen
+mails.unknownEmail.subject=Passwort Zurücksetzen
+mails.passwordResetOk.subject=Passwort wurde Geändert
+

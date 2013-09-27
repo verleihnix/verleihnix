@@ -1,0 +1,18 @@
+@(message: Message )
+@import org.joda.time.DateTime
+@msg.mainMsg(s"Nachricht von ${message.sender}: ${message.subject}"){
+
+    <div class="ym-gbox">
+    betreff: @message.subject    @if(message.typ.equals(MessageType.Ausleihe)){<a href="@routes.Profil.historie()">@message.refId</a>}<br/>
+                                 @if(message.typ.equals(MessageType.Notice)){<a href="@routes.BoardNotices.showNotice(message.refId)">Eintrag Schwarzes Brett #@message.refId</a>}<br/>
+    Sender: <a href="@controllers.routes.Profil.fremdesProfil(message.sender.id)">@message.sender.name </a>  <br/>
+    Date:   @if(message.dateTime.dayOfYear().equals(DateTime.now().dayOfYear())){
+                @message.dateTime.toString("'Heute', HH:mm:ss")
+            }  else {
+                @message.dateTime.toString("dd.MMM yyyy, HH:mm:ss",Locale.GERMAN)
+            }
+    message: @message.message     <br/>
+    <a href="@routes.Messaging.writeMessage()?msg.id=@message.id">reply</a>
+    <a href="@routes.Messaging.deleteMessage(message.id)">delete</a>
+    </div>
+}

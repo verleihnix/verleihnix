@@ -1,0 +1,150 @@
+@(geliehen: List[Ausleihe], verliehen: List[Ausleihe], boardItems: List[BoardNotice])
+@import helper._
+@import views.html.message
+@*Hilfsmethode für die Datumsausgabe - wie auf das in conf/messages definierte Format zugreifen? (http://www.playframework.com/documentation/1.1.1/i18n)?*@
+@printDate(d:Date) = @{d.format("dd.MM.yyyy")}
+
+@main("Historie - Verleihnix") {
+<h2>Historie</h2>
+
+@*Erfolgsmeldung für Aktionen wie erfolgreiches Eintragen, Zurückgeben usw. *@
+@if(flash.contains("success")) {
+	@message(flash.get("success"),"success")
+}else{
+    @if(flash.contains("error")) {
+        @message(flash.get("error"),"error")
+    }
+}
+
+<span class="ym-clearfix">
+<article class="ym-g50 ym-gl content">
+	<h3>Diese Objekte hast du ausgeliehen:</h3>
+	<ul class="itemlist">
+	@for(ausleihe <- geliehen) {
+	  <li>
+	  <div class="item box info">
+		  <h4>@ausleihe.item.titel</h4>
+		  <div class="itemmeta">
+			<p>@ausleihe.item.beschreibung</p>
+			<p>ausgeliehen von: @if(ausleihe.verleiher.benutzer!=null){<a href="@routes.Profil.fremdesProfil(ausleihe.verleiher.benutzer.id)"> @ausleihe.verleiher.getName() </a>}else{ @ausleihe.verleiher.getName()} am @printDate(ausleihe.von)<br />
+                @if(ausleihe.verleiher.benutzer!=null){<p><a href="@controllers.routes.Messaging.writeMessageAusleihe(ausleihe.id,ausleihe.verleiher.benutzer.id)"><img src="@routes.Assets.at("images/img/email_add.png")"> Nachricht schreiben</a></p><br/>}
+			@if(ausleihe.bis != null) {
+				Zurückgegeben am:  @printDate(ausleihe.bis)
+			} else { 
+				@if(ausleihe.frist != null) {
+				Rückgabefrist: @printDate(ausleihe.frist)
+				} else {
+				Noch nicht zurückgegeben - Keine Rückgabefrist
+				}
+			}
+			</p>
+			@if(ausleihe.bis == null) {
+				<p>
+				@form(routes.Verleih.rueckgabe(ausleihe.id)) {<input type="submit" value="Wurde zurückgegeben">}
+				</p>
+			} else{
+            	<div class="star" id="@ausleihe.id" data-rated="@ausleihe.verleiherBewertet()" data-score="@ausleihe.bewertungVerleiher()"></div>
+        	}
+			<blockquote>@ausleihe.verleiher.getName(): @ausleihe.kommentar</blockquote>
+		  </div>
+	  </div>
+	  </li>
+	}
+	</ul>
+</article>
+<article class="ym-g50 ym-gr content">
+	<h3>Diese Objekte hast du verliehen:</h3>
+	<ul class="itemlist">
+	@for(ausleihe <- verliehen) {
+	  <li>
+	  <div class="item box info">
+		  <h4>@ausleihe.item.titel</h4>
+		  <div class="itemmeta">
+			<p>@ausleihe.item.beschreibung</p>
+
+			<p>ausgeliehen an: @if(ausleihe.leiher.benutzer!=null){ <a href="@routes.Profil.fremdesProfil(ausleihe.leiher.benutzer.id)">@ausleihe.leiher.getName()</a> }else{ @ausleihe.leiher.getName()} am @printDate(ausleihe.von)<br />
+            @if(ausleihe.leiher.benutzer!=null){<p><a href="@controllers.routes.Messaging.writeMessageAusleihe(ausleihe.id,ausleihe.leiher.benutzer.id)"><img src="@routes.Assets.at("images/img/email_add.png")"> Nachricht schreiben</a></p><br/>}
+
+            @if(ausleihe.bis != null) {
+				Zurückgegeben am:  @printDate(ausleihe.bis)
+			} else { 
+				@if(ausleihe.frist != null) {
+				Rückgabefrist: @printDate(ausleihe.frist)
+				} else {
+				Noch nicht zurückgegeben - Keine Rückgabefrist
+				}
+			}
+			</p>
+			@if(ausleihe.bis == null) {
+				<p>
+				@form(routes.Verleih.rueckgabe(ausleihe.id)) {<input type="submit" value="Wurde zurückgegeben">}
+				</p>
+			} else{
+            	<div class="star" id="@ausleihe.id" data-rated="@ausleihe.leiherBewertet()" data-score="@ausleihe.bewertungLeiher()"></div>
+        	}
+			<blockquote>@ausleihe.verleiher.getName(): @ausleihe.kommentar</blockquote>
+		  </div>
+	  </div>
+	  </li>
+	}
+	</ul>
+</article>
+ </span>
+
+<div class="ym-gl content">
+    <h3>Anzeigen im Schwarzem Brett</h3>
+    <p>Hier findest du deine Anzeigen im schwarzem Brett</p>
+    <table>
+        <tr>
+            <th>Typ</th>
+            <th>Name</th>
+            <th>Restzeit</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @for(item <- boardItems) {
+        <tr class="notice" data-id="@item.id">
+            <td>@item.typ</td>
+            <td>@item.getTitle</td>
+            <td>@item.restzeit()</td>
+            <td>@if(item.istAktiv()){ @form(routes.BoardNotices.bearbeiten(item.id)) {<input type="submit" value="Bearbeiten">}}</td>
+            <td>@if(item.istAktiv()){ @form(routes.BoardNotices.archivieren(item.id)) {<input type="submit" value="Anzeige entfernen">}}</td>
+        </tr>
+        }
+    </table>
+    <div>
+
+
+        <script type="text/javascript" charset="utf-8">
+            //erzeugt den link zu der notice für jede zeile der table
+            $("tr.notice").click(function () {
+            document.location.href =jsRoutes.controllers.BoardNotices.showNotice($(this).attr("data-id")).url;
+            });
+
+
+        </script>
+
+    <script type="text/javascript">
+            $.fn.raty.defaults.path = '@routes.Assets.at("images/img")';
+            $('.star').raty({
+            click: function(score, evt) {
+            $.post("@routes.Verleih.bewerten()" ,
+            { 'ausleihe.id':$(this).attr('id'),
+              'wertung':score
+            }, function(data,status){
+            if(status =='success'){ $(data).raty('readOnly', true);}
+            }
+            );
+            },
+            readOnly: function() {
+            return ($(this).attr('data-rated')=='true');
+            },
+            score: function() {
+            return $(this).attr('data-score');
+            }
+            });
+
+
+    </script>
+
+}

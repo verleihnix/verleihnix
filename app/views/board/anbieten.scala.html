@@ -1,0 +1,195 @@
+@(anbietenForm: Form[BoardNotice], errorMsg: String,typ: NoticeTyp)
+@import play.api.data.validation.ValidationError
+
+@import helper._
+@import play.data.Form
+
+@main(typ.toString() +" - Verleihnix") {
+
+<h2>@if(typ==NoticeTyp.Anbieten){Ein Objekt anbieten }else{Ein Objekt suchen}</h2>
+
+@if(errorMsg != ""){
+	@message("Fehler im Formular: " + errorMsg,"error")
+}
+
+@form(if(typ==NoticeTyp.Anbieten) routes.BoardNotices.anbietenVerarbeiteForm() else routes.BoardNotices.suchenVerarbeiteForm(),'class -> "ym-form linearize-form",'id -> "noticeform") {
+
+    <input type="hidden" name="id" value="@anbietenForm.field("id").value()">
+    <input type="hidden" name="item.id" value="@anbietenForm.field("item.id").value()">
+    @defining(anbietenForm.field("item.titel")) { field =>
+        <div class="ym-fbox-text @if(!field.errors().isEmpty){ym-error}">
+            <label for="item.titel">Titel des Objektes</label>
+            @for(error <- field.errors()){<p class="ym-message">@error.message()</p>}
+            <input type="text" name="item.titel" id="item.titel" size="20" value="@field.valueOr("")" />
+        </div>
+    }
+
+    <div class="ym-fbox-text">
+        <label for="item.beschreibung">Beschreibung des Objektes</label>
+        <textarea name="item.beschreibung" id="item.beschreibung" cols="30" rows="7" >@anbietenForm.field("item.beschreibung").valueOr("")</textarea>
+    </div>
+    <div class="ym-fbox-text">
+        <label for="TagSelect">Tags:</label>
+        <input id="TagSelect" />
+
+        <div id="selectedTags">
+        @for(i <- 0 until anbietenForm.field("item.tags").indexes().size()){
+            @defining(anbietenForm.field("item.tags["+i+"].name").value()) {name  =>
+                <div style="clear:left" id="@name">
+                    <input class="tag" type="hidden" name="item.tags[]" value="@name">
+                    <a style='float: left'>@name</a>
+                    <img class="removeTag ui-icon ui-icon-trash" style='float: left' data-name="@name"></div>
+            }
+        }
+
+        </div>
+    </div>
+    <div class="ym-fbox-text">
+        <label for="kommentar">Anmerkungen zum Verleihvorgang</label>
+        <textarea name="kommentar" id="kommentar" cols="30" rows="7" >@anbietenForm.field("kommentar").valueOr("")</textarea>
+    </div>
+
+    @defining(anbietenForm.field("bis")) { field =>
+            <div class="ym-fbox-text @if(!field.errors().isEmpty){ym-error}">
+            <label for="bis">@if(typ==NoticeTyp.Anbieten){Das Angebot gilt bis}else{Ich brauche das Objekt bis}</label>
+            @for(error <- field.errors()){<p class="ym-message">@error.message()</p>}
+            <input type="text" name="bis" id="bis" size="20" value="@field.valueOr("")" />
+        </div>
+    }
+    @defining(anbietenForm.field("nurAnFreunde")) { field =>
+        <div class="ym-fbox-check">
+            <input type="checkbox" name="nurAnFreunde" id="nurAnFreunde" value="true"  @if(field.valueOr("").equals("true")){ checked="true"}/>
+            <label for="nurAnFreunde">nur an Freunde</label>
+        </div>
+    }
+
+
+
+
+    <div class="ym-fbox @if(!anbietenForm.field("uebergabe").errors().isEmpty){ym-error}">
+        <span class="ym-label">Akzeptierte Übergabemethoden</span>
+        @for(error <- anbietenForm.field("uebergabe").errors()){<p class="ym-message">@error.message()</p>}
+        <div class="ym-fbox-wrap">
+            @defining(anbietenForm.field("akzeptiertPost")) { field =>
+                <div class="ym-fbox-check">
+                    <input type="checkbox" name="akzeptiertPost" id="akzeptiertPost" value="true"  @if(field.valueOr("").equals("true")){ checked="true"}/>
+                    <label for="akzeptiertPost">Versand per Post</label>
+                </div>
+            }
+            @defining(anbietenForm.field("akzeptiertUebergabe")) { field =>
+                <div class="ym-fbox-check @if(!field.errors().isEmpty){ym-error}">
+                    <input type="checkbox" name="akzeptiertUebergabe" id="akzeptiertUebergabe" value="true"  @if(field.valueOr("").equals("true")){ checked="true"}/>
+                    <label for="akzeptiertUebergabe">Persönliche Übergabe</label>
+                    @for(error <- field.errors()){<p class="ym-message">@error.message()</p>}
+                    <div class="ym-fbox-text" id="hirer-box_uebergabe">
+                        <label for="uebergabeRadiusKM">Abholradius (km)</label>
+                        <input type="number" name="uebergabeRadiusKM" id="uebergabeRadiusKM" size="20" value="@anbietenForm.field("uebergabeRadiusKM").valueOr("")" />
+                    </div>
+                </div>
+        </div>
+    </div>
+    }
+
+
+
+<input type="submit" value="@if(anbietenForm.field("id").valueOr("").equals("")){Erstellen}else{Bearbeiten}" />
+}
+
+
+<script type="text/javascript">
+
+
+    jQuery(document).ready(function() {
+        if (!jQuery("#akzeptiertUebergabe").is(':checked'))
+            jQuery("#hirer-box_uebergabe").hide();
+        if (!jQuery("#anderes").is(':checked'))
+            jQuery("#hirer-box_sonstiges").hide();
+        if(jQuery("#uebergabeRadiusKM").val() === '')
+            jQuery("#uebergabeRadiusKM").val('2.5');
+    });
+    jQuery("#akzeptiertUebergabe").click(function() {
+		if (jQuery("#akzeptiertUebergabe").is(':checked')) {
+			jQuery("#hirer-box_uebergabe").show();
+		} else {
+			jQuery("#hirer-box_uebergabe").hide();
+		}
+	});
+    jQuery("#anderes").click(function() {
+        if (jQuery("#anderes").is(':checked')) {
+            jQuery("#hirer-box_sonstiges").show();
+        } else {
+            jQuery("#hirer-box_sonstiges").hide();
+        }
+    });
+
+</script>
+<style>
+        .ui-autocomplete-category {
+        font-weight: bold;
+        padding: .2em .4em;
+        margin: .8em 0 .2em;
+        line-height: 1.5;
+        }
+</style>
+<script>
+    $(function() {
+        $( "#bis" ).datepicker({ minDate: 1,dateFormat: "yy-mm-dd"});
+    });
+</script>
+<script>
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+        _renderMenu: function( ul, items ) {
+            var that = this,
+            currentCategory = "";
+            $.each( items, function( index, item ) {
+                if ( item.category != currentCategory ) {
+                    ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+                    currentCategory = item.category;
+                }
+                that._renderItemData( ul, item );
+            });
+        }
+    });
+</script>
+
+<script>
+
+$(document).ready(function(){
+    function addTag( name ) {
+		$( "<div style='clear:left'>" ).attr("id",name).append(
+			$("<input type='hidden' > ").val(name).attr("name","item.tags[]").attr("class","tag"),
+			$("<a style='float: left'>").text(name),
+			$("<img class='removeTag ui-icon ui-icon-trash ' style='float: left'>").attr("data-name",name).click(function () {
+				removeTag($(this).attr("data-name"));
+			})
+		)
+		.appendTo( "#selectedTags" );
+    }
+    function removeTag(id){
+        $("#"+id).remove();
+    }
+    $(".removeTag").click(function () {removeTag($(this).attr("data-name"));});
+    $('#noticeform').submit(function() {
+    $(".tag").attr( "name", function(index, attr){return "item.tags["+index+"].name"} );
+    });
+
+    $( "#TagSelect" ).catcomplete({
+		source:function( request, response ) {
+		$.post("@routes.BoardNotices.tagFindeOrCreate()" ,
+		{ name:request.term
+		}, response
+		, "json");
+		},select: function( event, ui ) {
+		if ( ui.item && $("#"+ui.item.label).length == 0 && ui.item.valu!=-1) {
+		    addTag(ui.item.label );
+		    $(this).val('');
+            if(ui.item.category!=""){
+                $.post("@routes.BoardNotices.tagCreate()" , { name:ui.item.valu });
+            }
+
+		} return false;
+		}
+	});
+});
+</script>
+}

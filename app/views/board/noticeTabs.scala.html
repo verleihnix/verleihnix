@@ -1,0 +1,9 @@
+@(activeTab: NoticeTyp)
+<div id="Tabs">
+<span class="Tab @if(activeTab==NoticeTyp.Anbieten){active}">
+    <a href="@routes.BoardNotices.showNotices(NoticeTyp.Anbieten,1)">angeboten</a>
+</span>
+<span class="Tab @if(activeTab==NoticeTyp.Suchen){active}">
+    <a href="@routes.BoardNotices.showNotices(NoticeTyp.Suchen,1)">gesucht</a>
+</span>
+</div>

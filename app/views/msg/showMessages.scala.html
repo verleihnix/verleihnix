@@ -1,0 +1,55 @@
+@( rmsgs: List[EmpfangeneMessage],pages: Integer,page: Integer)
+@import play.data.Form
+@import org.joda.time.DateTime
+@msg.mainMsg("Nachrichten"){
+    <script>$(document).ready(function(){
+        $('#check_all').click(function () {
+            $(".delete").prop("checked",this.checked);
+        });
+    });
+    </script>
+    @helper.form(action = routes.Messaging.deleteMessages()) {
+
+        <table>
+        <tr><th>Date</th><th>Subject</th><th>From</th><th><input id="check_all" type="checkbox" ></th></tr>
+        @for(rmsg <- rmsgs) {
+         <tr>
+             <td>
+                 @if(rmsg.message.dateTime.dayOfYear().equals(DateTime.now().dayOfYear())){
+                     @rmsg.message.dateTime.toString("'Heute', HH:mm:ss")
+                 } else { @rmsg.message.dateTime.toString("dd.MMM yyyy, HH:mm:ss",Locale.GERMAN)
+                 }</td>
+             <td><a href="@controllers.routes.Messaging.readMessage(rmsg.id)"> @if(rmsg.read){@rmsg.message.subject}else{<b>@rmsg.message.subject</b>} </a></td>
+            <td><a href="@controllers.routes.Profil.fremdesProfil(rmsg.message.sender.id)">@rmsg.message.sender.fullName()</a></td>
+            <td><input class="delete" type="checkbox" name="ids[]" value="@rmsg.id" /></td>
+        </tr>
+        }
+        </table>
+        <div class="ym-grid">
+            <div class="ym-g66 ym-gl">
+                <div class="ym-gbox">
+                    Page: @for(p <- 1 until pages) {
+                        @if((p-1).equals(page)){
+                            @(p),
+                        }else {
+                            <a href="@routes.Messaging.showMessages(p-1)">@(p)</a>,
+                        }
+                    }
+                    @if((pages-1).equals(page)){
+                        @(pages)
+                    }else {
+                        <a href="@routes.Messaging.showMessages(pages-1)">@(pages)</a>
+                    }
+
+                </div>
+            </div>
+            <div class="ym-g33 ym-gr">
+                <div class="ym-gbox">
+                    <input type="submit" value="Delete Selected" style="float: right">
+                </div>
+            </div>
+        </div>
+
+    }
+
+}

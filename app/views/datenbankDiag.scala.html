@@ -1,0 +1,46 @@
+@(ausleihen: List[Ausleihe], i: List[Item], p: List[Person])
+@*WICHTIG: Um die DatenbankDiag anzeigen zu können, muss die entsprechende Route einkommentiert werden!*@
+@main("Welcome to Verleinix") {
+<h2>Ausleihen</h2>
+<ul>
+    @for(aus <- ausleihen) {
+        <li>id: @aus.id</li>
+        <ul>
+        <li>von: @aus.von</li>
+        <li>bis: @aus.bis</li>
+        <li>frist: @aus.frist</li>
+        <li>kom: @aus.kommentar</li>
+        <li>item: @aus.item.titel</li>
+        </ul>
+    }
+</ul>
+<h2>Items</h2>
+<ul>
+@for(aus <- i) {
+    <li>id: @aus.id</li>
+    <ul>
+    <li>titel: @aus.titel</li>
+    <li>desc: @aus.beschreibung</li>
+    </ul>
+}
+</ul>
+<h2>Personen</h2>
+<ul>
+@for(aus <- p) {
+    <li>id: @aus.id</li>
+    <ul>
+    @if(aus.benutzer != null) {
+        <li>Vorname: @aus.benutzer.vorname</li>
+        <li>Nachname: @aus.benutzer.name</li>
+        <li>email: @aus.benutzer.email</li>
+        <li>ort: @aus.benutzer.wohnort</li>
+    } else {
+        <li>Keinem Benutzer zugeordnet!</li>
+    }
+    <li>verliehen: @for(v <- aus.verliehen){@v.id, }</li>
+    <li>geliehen: @for(v <- aus.geliehen){@v.id, }</li>
+    <li>items: @for(v <- aus.items){@v.id, }</li>
+    </ul>
+}
+</ul>
+}

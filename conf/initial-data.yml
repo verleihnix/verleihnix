@@ -1,0 +1,93 @@
+# Item
+
+#item:
+
+
+# Ausleihe
+
+ausleihe:
+    
+  - !!models.Ausleihe
+      id:         2000
+      von:        2013-10-10
+      frist:      2013-10-12
+      kommentar:  "test"
+      item: !!models.Item
+              id:           1002
+      verleiher:  !!models.Person
+                    id: 101
+      leiher:     !!models.Person
+                    id: 100
+
+  - !!models.Ausleihe
+      id:         2001
+      von:        2013-10-10
+      frist:      2013-10-12
+      kommentar:  "test"
+      item: !!models.Item
+              id:           1001
+              
+      verleiher:  !!models.Person
+                    id: 100
+      leiher:     !!models.Person
+                    id: 101
+
+benutzer:
+ - !!models.Benutzer
+             id:       500
+             email:    "test1@sample.com"
+             name:     "Mustermann"
+             vorname:  "Max"
+             wohnort:  "Hamburg"
+             uId:      "test1@sample.com"
+             providerId: "userpass"
+             passwort: "$2a$10$3P3Hxbc2/SWrmYfXP6UZAuzXU6vEeM5uDGq7C.P0LB7fvZqfOb.fO" # ohne hash: 123456
+             hasher:   "bcrypt"
+             authMethod: "userPassword"
+
+
+ - !!models.Benutzer
+            id:       501
+            email:    "test2@sample.com"
+            name:     "Digital"
+            vorname:  "Dora"
+            wohnort:  "Hamburg"
+            uId:      "test2@sample.com"
+            providerId: "userpass"
+            passwort: "$2a$10$3P3Hxbc2/SWrmYfXP6UZAuzXU6vEeM5uDGq7C.P0LB7fvZqfOb.fO"
+            hasher:   "bcrypt"
+            authMethod: "userPassword"
+# Person
+
+person:
+
+  - !!models.Person
+      id:           100
+      simpleName:   "test1-User"
+      benutzer:
+        !!models.Benutzer
+            id:       500
+      items:
+            - !!models.Item
+                id:           1000
+                titel:        "Gartenschlauch"
+                beschreibung: "Grün und 25 Meter Länge"
+
+            - !!models.Item
+                id:           1001
+                titel:        "Heckenschere"
+                beschreibung: "leider etwas stumpf"
+
+
+  - !!models.Person
+      id:           101
+      simpleName:   "test2-User"
+      benutzer:
+        !!models.Benutzer
+            id:       501
+      items:
+        - !!models.Item
+            id:           1002
+            titel:        "Hocker"
+            beschreibung: "sehr gemütlich, allerdings ohne Lehne"
+              

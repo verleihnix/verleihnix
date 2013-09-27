@@ -1,0 +1,17 @@
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+<ul>
+	@*<li><a href="@controllers.routes.Application.datenbankDiag">Datenbank-Inhalte</a></li>*@
+	@subjectPresentOr() {
+	<li><a href="@controllers.routes.Verleih.ausleihen()">Ausleihen</a><li>
+	<li><a href="@controllers.routes.Verleih.verleihen()">Verleihen</a><li>
+	<li><a href="@controllers.routes.Profil.historie()">Historie</a><li>
+    <li><a href="@controllers.routes.Messaging.showMessages(0)">Nachrichten</a><li>
+	<li><a href="@controllers.routes.Profil.profil()">Profil</a><li>
+	<li><a href="@securesocial.core.providers.utils.RoutesHelper.logout()">Logout</a><li>
+	} {
+	<li><a href="@securesocial.core.providers.utils.RoutesHelper.login()">Login</a><li>
+	<li><a href="@securesocial.core.providers.utils.RoutesHelper.startSignUp()">Registrieren</a><li>
+	}
+</ul>

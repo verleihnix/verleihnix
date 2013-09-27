@@ -1,0 +1,77 @@
+@(anbietenForm: Form[BoardNotice], errorMsg: String)
+
+@import helper._
+
+@main("Suche - Verleihnix") {
+
+<h2>Ein Objekt suchen</h2>
+
+@if(errorMsg != ""){
+	@message("Fehler im Formular: " + errorMsg,"error")
+}
+
+@form(routes.BoardNotices.suchenVerarbeiteForm()) {
+	@inputText(anbietenForm("item.titel"), '_label -> "Titel des Objektes" )
+    @textarea(anbietenForm("item.beschreibung"), '_label -> "Beschreibung des Objektes" )
+
+    @textarea(anbietenForm("kommentar"), '_label -> "Anmerkungen zum Verleihvorgang" )
+    @inputDate(anbietenForm("bis"), '_label -> "Ich brauche das Objekt bis" )
+<h3>Akzeptierte Übergabemethoden</h3>
+@checkbox(anbietenForm("akzeptiertPost"), '_label -> "Versand per Post")
+
+
+<div class="ym-grid">
+    <div class="ym-g20 ym-gl">
+        @checkbox(anbietenForm("akzeptiertUebergabe"), '_label -> "Persönliche Übergabe")
+    </div>
+    <div class="ym-g80 ym-gr">
+        <div id="hirer-box_uebergabe">
+            @inputText(anbietenForm("uebergabeRadiusKM"), '_label -> "Abholradius (km)" )
+        </div>
+    </div>
+</div>
+<div class="ym-grid">
+    <div class="ym-g20 ym-gl">
+        <dl>
+        <dt><label for="anderes">Andere Übergabemethode...</label></dt>
+        <dd>
+            <input type="checkbox" id="anderes" name="anderes"/>
+            <span></span>
+        </dd>
+        </dl>
+    </div>
+    <div class="ym-g80 ym-gr">
+        <div id="hirer-box_sonstiges">
+            @inputText(anbietenForm("akzeptiertSonstiges"), '_label -> "und zwar:" )
+        </div>
+    </div>
+</div>
+<input type="submit" value="Erstellen" />
+}
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        if (!jQuery("#akzeptiertUebergabe").is(':checked'))
+            jQuery("#hirer-box_uebergabe").hide();
+        if (!jQuery("#anderes").is(':checked'))
+            jQuery("#hirer-box_sonstiges").hide();
+        if(jQuery("#uebergabeRadiusKM").val() === '')
+            jQuery("#uebergabeRadiusKM").val('2.5');
+    });
+    jQuery("#akzeptiertUebergabe").click(function() {
+		if (jQuery("#akzeptiertUebergabe").is(':checked')) {
+			jQuery("#hirer-box_uebergabe").show();
+		} else {
+			jQuery("#hirer-box_uebergabe").hide();
+		}
+	});
+    jQuery("#anderes").click(function() {
+        if (jQuery("#anderes").is(':checked')) {
+            jQuery("#hirer-box_sonstiges").show();
+        } else {
+            jQuery("#hirer-box_sonstiges").hide();
+        }
+    });
+</script>
+
+}

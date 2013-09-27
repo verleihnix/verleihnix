@@ -1,0 +1,15 @@
+@(notices:List[BoardNotice], typ:NoticeTyp, showPage:Integer, pages: Integer)
+
+
+
+<br>Seite: @for(pNum <- 1 until pages){
+    @printPage(pNum),
+} @printPage(pages)
+
+@printPage(pNum: Integer)={
+    @if(pNum == showPage){
+        @pNum
+    }else{
+        <a href="@routes.BoardNotices.showNotices(typ,pNum)">@(pNum)</a>
+    }
+}

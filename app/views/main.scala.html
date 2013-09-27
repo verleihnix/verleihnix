@@ -1,0 +1,76 @@
+@(title: String,navbar: Html= views.html.navbar.apply())(content: Html)
+@import controllers.routes.javascript._
+<!doctype html>
+<html lang="de">
+<head>
+	<meta charset="utf-8"/>
+	<title>@title</title>
+
+	<!-- Mobile viewport optimisation -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- (en) Add your meta data here -->
+	<!-- (de) Fuegen Sie hier ihre Meta-Daten ein -->
+
+	<link href="@routes.Assets.at("stylesheets/flexible-grids.css")" rel="stylesheet" type="text/css" />
+
+    <!--[if lte IE 7]>
+	<link href="../yaml/core/iehacks.css" rel="stylesheet" type="text/css" />
+	<![endif]-->
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")"/>
+    <link href="@routes.Assets.at("stylesheets/ui-darkness/jquery-ui-1.10.2.custom.min.css")" rel="stylesheet" type="text/css" />
+	<script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/jquery-ui-1.10.2.custom.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/jquery.raty.min.js")" type="text/javascript"></script>
+    <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
+
+</head>
+<body>
+<ul class="ym-skiplinks">
+	<li><a class="ym-skip" href="#nav">Skip to navigation (Press Enter)</a></li>
+	<li><a class="ym-skip" href="#main">Skip to main content (Press Enter)</a></li>
+</ul>
+
+<header>
+	<div class="ym-wrapper">
+		<div class="ym-wbox">
+			<h1><a href="/">Verleihnix</a></h1>
+			<a href="/"><img src="@routes.Assets.at("images/img/verleihnix_transparent.png")" /></a>
+		</div>
+	</div>
+</header>
+<nav id="nav">
+    <div class="ym-wrapper">
+        <div class="ym-hlist">
+			@navbar
+        </div>
+    </div>
+</nav>
+
+<div id="main">
+	<div class="ym-wrapper">
+		<div class="ym-wbox">
+			<section class="ym-grid linearize-level-1">
+			@content
+			</section>
+		</div>
+	</div>
+</div>
+
+<footer>
+	<div class="ym-wrapper">
+		<div class="ym-wbox">
+			<p>Verleihnix von SoftSlick 2013 &ndash; Layout based on <a href="http://www.yaml.de">YAML</a></p>
+		</div>
+	</div>
+</footer>
+
+<!-- full skip link functionality in webkit browsers -->
+<script src="@routes.Assets.at("yaml/core/js/yaml-focusfix.js")" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+@media all {
+
+header h1 { display: none; }
+header h1 a { color: #fff; }
+header a:hover { background: none; }
+header { background-color: rgb(77, 135, 199); }
+
+.usermeta { margin: 1em 0; }
+ul.itemlist {
+	list-style-type: none;
+	padding: 0px;
+	margin: 1em 0 0 0;
+}
+ul.itemlist li {
+	margin: 0; padding: 0;
+}
+.item { width: 80%; }
+.itemmeta { }
+#Tabs{
+    border-bottom: 1px solid gray;
+	margin: 40px 0 5px;
+	padding: 5px 0 4px 1px;
+}
+.Tab{
+    border: 1px solid gray;
+    padding: 4px;
+    margin-right: 4px;
+    background: #F2F2F2;
+}
+.Tab a{
+    color: #222222;
+}
+.Tab a:hover{
+    background:none;
+
+}
+.active{
+    background: #AAAAAA;
+}
+
+#notices{
+    list-style: none;
+    margin-left:0px;
+    margin-bottom: 10px;
+}
+#notices .c1 {
+    width:40%;
+}
+#notices .c2 {
+    width:60%;
+}
+.noticeItem {
+    margin-left:0;
+}
+
+.noticeItem table{
+    margin:0px;
+    border-top:0;
+
+}
+.noticeItem td{
+    border-top:0;
+}
+
+/*
+ * CSS für MsgBoxen
+ */
+
+.msgBox {
+    border:1px solid #888888;
+    padding: 8px;
+    padding-bottom:2px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 2px 2px 2px #ccc;
+    border-radius: 3px;
+    font-size: 110%;
+    font-color: #222222;
+}
+.msgBox.success{
+    background: #6DB24B;
+}
+.msgBox.error{
+    background: #c88;
+}
+.msgBox.info{
+    background: rgb(224, 224, 224);
+}
+.msgBox table {
+    margin:0;
+    padding:0;
+    border:0;
+}
+.msgBox tr:hover td{
+    background: inherit;
+}
+.msgBox td {
+    margin:0;
+    padding:0;
+    border:0;
+    vertical-align: middle;
+    text-align: left;
+}
+.msgBox td.img {
+    width:40px;
+}
+ul#msgnav { 
+	list-style-type: none;
+	padding: 0px;
+	margin: 1em 0 0 0;
+}
+ul#msgnav li {
+	margin: 0;
+	padding: 0;
+}
+ul#msgnav li a {
+	padding-left: 22px;
+	background-image: url('/assets/images/img/email.png');
+	background-repeat: no-repeat;
+}
+ul#msgnav li.msgnew a {
+	background-image: url('/assets/images/img/email_add.png');
+}
+
+}
+
+@media screen and ( max-width: 480px) {
+	header h1 { display: block; }
+	header img { display: none; }
+}

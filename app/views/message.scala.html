@@ -1,0 +1,18 @@
+@* Zeigt eine Message an. Mögliche Werte für Style: "success", "info", "error" *@
+@(message: String, style: String)
+
+
+<div class = "msgBox @style">
+    <table>
+        <tr>
+            <td class="img">
+                <img src="@style match {
+                    case "success" => {@routes.Assets.at("images/img/success32.png")}
+                    case "error" => {@routes.Assets.at("images/img/error32.png")}
+                    case "info" => {@routes.Assets.at("images/img/info32.png")}
+                }">
+            </td>
+            <td>@message</td>
+        </tr>
+    </table>
+</div>

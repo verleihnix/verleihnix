@@ -1,0 +1,47 @@
+@(ausleiheForm: Form[Ausleihe], errorMsg: String, bekannteVerleiher: List[Person])
+
+@import helper._
+
+@main("Etwas ausleihen - Verleihnix") {
+
+<h2>Ausleihen</h2>
+
+@if(errorMsg != ""){
+	<b style="color:red;">Fehler im Formular: @errorMsg</b>
+}
+
+@form(routes.Verleih.neueAusleihe()) {
+	@inputText(ausleiheForm("item"), '_label -> "Objekt" )
+
+	<div class="ym-grid">
+		<div class="ym-g20 ym-gl">
+		@select(
+			ausleiheForm("verleiher.id"),
+			options = Seq("0" -> "(Neue Person)") ++ (bekannteVerleiher.map{ elem => elem.id.toString -> elem.getName()}),
+			'_label-> "Von wen?"
+		)
+		</div>
+		<div class="ym-g80 ym-gr">
+			<div id="new-hirer-box">
+				@inputText(ausleiheForm("verleiher.simpleName"), '_label -> "Name" )
+			</div>
+		</div>
+	</div>
+
+	@textarea(ausleiheForm("kommentar"), '_label -> "Anmerkungen" )
+	@inputDate(ausleiheForm("von"), '_label -> "Verleihdatum (standard ist heute)" )
+	@inputDate(ausleiheForm("frist"), '_label -> "Rückgabefrist" )
+	<input type="submit" value="Ausleihen" />
+}
+
+<script type="text/javascript">
+	jQuery("#leiher_id").click(function() {
+		if (jQuery("#leiher_id").val() === "0") {
+			jQuery("#new-hirer-box").show();
+		} else {
+			jQuery("#new-hirer-box").hide();
+		}
+	});
+</script>
+
+}

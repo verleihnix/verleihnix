@@ -1,0 +1,27 @@
+@(freundesliste: Set[Benutzer],eigeneliste: Set[Person])
+@main("Deine Freunde - Verleihnix") {
+
+    @if(flash.contains("success")) {
+        @message(flash.get("success"),"success")
+    }
+    @if(freundesliste.isEmpty){
+        <p>Deine Freundesliste ist noch Leer</p>
+    } else{
+        <table>
+
+        @for(p <- freundesliste){
+
+          <tr>
+            <td><a href="@routes.Profil.fremdesProfil(p.id)">@p.fullName()</a></td>
+            <td><a href="@routes.Messaging.writeMessageTo(p.id)"><img src="@routes.Assets.at("images/img/email_add.png")"> Nachricht schreiben</a></td>
+            <td><a href="@routes.Profil.removeFreund(p.id)"> entfernen</a></td>
+          </tr>
+
+        }
+        </table>
+    }
+    @for(p <- eigeneliste){
+        @p.getName
+    }
+
+}

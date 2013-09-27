@@ -1,0 +1,11 @@
+@(title: String)(content: Html)
+@main(title + " - Verleihnix"){
+    <p>msg menu</p>
+    <ul id="msgnav">
+        <li class="msglist"><a href="@controllers.routes.Messaging.showMessages(0)">Nachrichten</a></li>
+        <li class="msgsend"><a href="@controllers.routes.Messaging.showSendMessages(0)">Gesendete Nachrichten</a></li>
+        <li class="msgnew"><a href="@controllers.routes.Messaging.writeMessage()">Neue Nachricht</a></li>
+    </ul>
+    <br/> <br/><br/>
+    @content
+}

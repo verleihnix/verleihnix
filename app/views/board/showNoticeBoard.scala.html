@@ -1,0 +1,148 @@
+@(notices:List[BoardNotice], activeTab:NoticeTyp, curentPage:Integer,pages:Integer, totalresult:Integer,searchForm:play.data.Form[forms.BoardNoticeSearchForm])
+@import models.BoardNotice.Page
+@import play.data.Form
+@import controllers.routes.javascript._
+@import be.objectify.deadbolt.java.views.html._
+
+@main((if(activeTab == NoticeTyp.Anbieten){"Angebotene Objekte"} else {"Gesuchte Objekte"}) + " - Verleihnix" ){
+    @helper.form(action = routes.BoardNotices.showNotices(activeTab,1),'class -> "ym-form linearize-form ",'id -> "searchForm") {
+          <div class="ym-fbox-text searchbox">
+            <label for="search">Search</label>
+            <input type="search" name="search" id="search" size="20" value="@searchForm.field("search").value()" />
+        </div>
+
+        <div class="ym-fbox-text searchextend">
+            <label for="TagSelect">Tags:</label>
+            <input id="TagSelect" />
+
+            <div id="selectedTags">
+                @for(i <- 0 until searchForm.field("tags").indexes().size()){
+                    @defining(searchForm.field("tags["+i+"].name").value()) {name  =>
+                        <div style="clear:left" id="@name">
+                        <input class="tag" type="hidden" name="tags[]" value="@name">
+                        <a style='float: left'>@name</a>
+                        <img class="removeTag ui-icon ui-icon-trash" style='float: left' data-name="@name"></div>
+                    }
+                }
+
+            </div>
+        </div>
+
+        <div class="ym-fbox-check searchextend">
+            <span class="ym-label">Akzeptiert Versand</span>
+            <input type="radio" name="acceptPost" value="" id="postEgal" @if(searchForm.field("acceptPost").valueOr("").equals("")){ checked="true" }/>
+            <label for="your-id">egal</label>
+            <input type="radio" name="acceptPost" value="true" id="postJa" @if(searchForm.field("acceptPost").valueOr("").equals("true")){ checked="true" }/>
+            <label for="your-id">Ja</label>
+            <input type="radio" name="acceptPost" value="false" id="postNein" @if(searchForm.field("acceptPost").valueOr("").equals("false")){ checked="true" }/>
+            <label for="your-id">Nein</label>
+        </div>
+
+        <div class="ym-fbox-check searchextend">
+
+                <label for="your-id">nur von Freunden anzeigen</label>
+                <input type="checkbox" name="friendsOnly" value="true" @subjectNotPresent(){disabled=""  } @if(searchForm.field("friendsOnly").valueOr("").equals("true")){ checked="true" }/>
+
+
+        </div>
+
+        <div class="ym-fbox-text searchextend">
+            <label for="area">Radius</label>
+            <input type="text" name="area" id="area" size="10" @subjectNotPresent(){disabled="" }/>
+        </div>
+		<div class="ym-fbox-button">
+			<button class="save">Suchen</button>
+		</div>
+    }
+
+    @noticeTabs(activeTab)
+    <b>@totalresult</b> Ergebnis@if(totalresult != 1){se} gefunden.
+    <div>
+    @if(activeTab == NoticeTyp.Anbieten){
+        <a class="ym-button ym-next" href="@routes.BoardNotices.anbieten()">Selber etwas anbieten</a>
+    } else {
+        <a class="ym-button ym-next" href="@routes.BoardNotices.suchen()">Selber etwas suchen</a>
+    }
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Von</th>
+            <th>Tags</th>
+            @subjectPresent(){
+            <th>Distanz(Km)</th>
+            }
+        </tr>
+        </thead>
+    @for(notice <- notices) {
+        <tr class="notice" data-id="@notice.id">
+        <td><a href="@routes.BoardNotices.showNotice(notice.id)">@notice.item.titel</a></td>
+        <td><a href="@routes.Profil.fremdesProfil(notice.owner.id)"> @notice.owner.toString()</a></td>
+        <td>
+        @for(t:Tag <-notice.item.tags){
+            @t.name,         } </td>
+        @subjectPresent(){
+        <td>@if(Benutzer.loggedInUser().plz!=null){@notice.distance.formatted("%.2f")}else{Du must deine Plz im Profil Angeben}</td>
+        }
+        </tr>
+    }
+    </table>
+    @makePages(notices, activeTab, curentPage, pages)
+
+    <script type="text/javascript" charset="utf-8">
+            //erzeugt den link zu der notice für jede zeile der table
+            $("tr.notice").click(function () {
+            document.location.href =jsRoutes.controllers.BoardNotices.showNotice($(this).attr("data-id")).url;
+            });
+
+
+    </script>
+
+    <script>
+
+$(document).ready(function(){
+    function addTag( name ) {
+		$( "<div style='clear:left'>" ).attr("id",name).append(
+			$("<input type='hidden' > ").val(name).attr("name","tags[]").attr("class","tag"),
+			$("<a style='float: left'>").text(name),
+			$("<img class='removeTag ui-icon ui-icon-trash ' style='float: left'>").attr("data-name",name).click(function () {
+				removeTag($(this).attr("data-name"));
+			})
+		)
+		.appendTo( "#selectedTags" );
+    }
+    function removeTag(id){
+        $("#"+id).remove();
+    }
+    $(".removeTag").click(function () {removeTag($(this).attr("data-name"));});
+
+    $('#searchForm').submit(function() {
+        $(".tag").attr( "name", function(index, attr){return "tags["+index+"].name"} );
+    });
+
+    $( "#TagSelect" ).autocomplete({
+		source:function( request, response ) {
+		$.post("@routes.BoardNotices.tagSearch()" ,
+		{ name:request.term
+		}, response
+		, "json");
+		},select: function( event, ui ) {
+		if ( ui.item && $("#"+ui.item.label).length == 0 && ui.item.valu!=-1) {
+		addTag(ui.item.label );
+		$(this).val('');
+		} return false;
+		}
+	});
+
+	$("#searchForm .searchextend").css("display", "none");
+	$("#searchForm .searchbox").append('<a id="extended-search-link" href="#">erweiterte Suche</a>').click(function() {
+		$("#searchForm #extended-search-link").remove();
+		$("#searchForm .searchextend").css("display", "block");
+	});
+});
+
+
+    </script>
+
+}

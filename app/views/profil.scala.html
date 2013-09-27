@@ -1,0 +1,79 @@
+@(benutzer: Benutzer)(verliehen: List[Ausleihe])(geliehen: List[Ausleihe])(gesamtwertung: Double)(isLoggedInUser: Boolean)
+@main(s"Profil von ${benutzer.fullName()} -  Verleihnix") {
+
+    @* Benutzerprofil wurde erfolgreich geändert. *@
+    @if(flash.contains("success")) {
+    	@message(flash.get("success"),"success")
+    }
+
+   	<h2>@benutzer.vorname @benutzer.name</h2>
+	@if(isLoggedInUser) {
+        <div><a href="@controllers.routes.Profil.profilEdit()">(ändern)</a></div>
+        <div><a href="@controllers.routes.Profil.freundesListe()">Freundesliste</a></div>
+    }else{
+        @if(Benutzer.loggedInUser() !=null ) {
+            @if( !Benutzer.loggedInUser().freundesListe.contains(benutzer)) {
+                <div><a href="@controllers.routes.Profil.addFreund(benutzer.id)"><img src=""  /> zur Freundesliste hinzufügen</a></div>
+            }else{
+                <div><a href="@controllers.routes.Profil.removeFreund(benutzer.id)"><img src="" />von der Freundesliste entfernen</a></div>
+            }
+        }
+    }
+	<div class="usermeta">
+		<div>Geburtsdatum: @helpers.DateHelper.toDD_MM_YYYY_String(benutzer.geburtsdatum)</div>
+		<div>E-Mail: @benutzer.email</div>
+		<div>Wohnort: @benutzer.wohnort</div>
+        <div>Plz: @if(benutzer.plz!=null){@benutzer.plz.plz}</div>
+		<div>Bewertung: <div id='bewertung' ></div></div>
+	</div>
+
+
+    @if(isLoggedInUser) {
+	<article class="ym-g50 ym-gl content">
+		<h3>Geliehen</h3>
+		<ul class="itemlist">
+		@for(ausleihe <- geliehen) {
+		  <li>
+		  <div class="item box info">
+			  <h4>@ausleihe.item.titel</h4>
+			  <div class="itemmeta">
+				@ausleihe.item.beschreibung
+                  @if(ausleihe.verleiher.benutzer!=null){<blockquote><a href="@routes.Profil.fremdesProfil(ausleihe.verleiher.benutzer.id)"> @ausleihe.verleiher.getName() </a> : @ausleihe.kommentar</blockquote>}
+			  </div>
+		  </div>
+		  </li>
+		}
+		</ul>
+	</article>
+	<article class="ym-g50 ym-gr content">
+		<h3>Verliehen</h3>
+		<ul class="itemlist">
+		@for(ausleihe <- verliehen) {
+		  <li>
+		  <div class="item box info">
+			  <h4>@ausleihe.item.titel</h4>
+			  <div class="itemmeta">
+				@ausleihe.item.beschreibung
+                @if(ausleihe.leiher.benutzer!=null){<blockquote><a href="@routes.Profil.fremdesProfil(ausleihe.leiher.benutzer.id)"> @ausleihe.leiher.getName() </a> : @ausleihe.kommentar</blockquote>}
+			  </div>
+		  </div>
+		  </li>
+		}
+		</ul>
+	</article>
+    }
+
+    <script type="text/javascript">
+            $.fn.raty.defaults.path = '@routes.Assets.at("images/img")';
+            $('#bewertung').raty({
+            score: @gesamtwertung,
+            halfShow: true,
+            hints: @defining( "%.2f".format(gesamtwertung)){wert =>['@wert','@wert','@wert','@wert','@wert']},
+            readOnly: true,
+            noRatedMsg: 'hat noch keine Bewertung'
+
+            });
+
+
+    </script>
+}

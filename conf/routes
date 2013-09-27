@@ -1,0 +1,93 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+#GET    /datenbankDiag                  controllers.Application.datenbankDiag()
+#verleih
+
+GET     /verleihen                  controllers.Verleih.verleihen()
+GET     /ausleihen                  controllers.Verleih.ausleihen()
+POST    /bewerten                   controllers.Verleih.bewerten()
+#benutzerprofile
+GET     /profil                     controllers.Profil.profil()
+GET     /profil/:id                 controllers.Profil.fremdesProfil(id: Long)
+GET     /profil/edit/               controllers.Profil.profilEdit()
+POST    /profil/edit/               controllers.Profil.submitProfileChange()
+#freundesListe
+GET     /friends                    controllers.Profil.freundesListe()
+GET     /friends/add/:id            controllers.Profil.addFreund(id: Long)
+GET     /friends/remove/:id         controllers.Profil.removeFreund(id: Long)
+
+GET     /historie                   controllers.Profil.historie()
+
+POST     /ausleihen                 controllers.Verleih.neueAusleihe()
+POST     /verleihen                 controllers.Verleih.neueVerleihe()
+POST     /historie:id               controllers.Verleih.rueckgabe(id: Long)
+
+#Messaging
+GET     /msg/show/:num              controllers.Messaging.showMessages(num: Integer)
+GET     /msg                        controllers.Messaging.showMessages(num: Integer =0)
+GET     /msg/show                   controllers.Messaging.showMessages(num: Integer =0)
+GET     /msg/read/:id               controllers.Messaging.readMessage(id: Long)
+POST    /msg/delete                 controllers.Messaging.deleteMessages()
+GET     /msg/delete/:id             controllers.Messaging.deleteMessage(id: Long)
+
+GET     /msg/showSend/:num          controllers.Messaging.showSendMessages(num: Integer)
+GET     /msg/showSend               controllers.Messaging.showSendMessages(num: Integer =0)
+GET     /msg/readSend/:id           controllers.Messaging.readSendMessage(id: Long)
+POST    /msg/deleteSend             controllers.Messaging.deleteSendMessages()
+GET     /msg/deleteSend/:id         controllers.Messaging.deleteSendMessage(id: Long)
+
+GET     /msg/write                  controllers.Messaging.writeMessage()
+GET     /msg/write/:id              controllers.Messaging.writeMessageTo(id:Long)
+GET     /msg/writeAusleihe          controllers.Messaging.writeMessageAusleihe(ausleiheid: Long,empfId: Long)
+GET     /msg/writeNotice            controllers.Messaging.writeMessageNotice(noticeId:Long,empfId:Long)
+POST    /msg/write                  controllers.Messaging.sendMessages()
+
+
+POST    /msg/benutzerSearch         controllers.Messaging.liveBenutzerSearch()
+
+#BoardNotices
+GET     /board/read/:id             controllers.BoardNotices.showNotice(id: Long)
+POST    /board/archivieren:id       controllers.BoardNotices.archivieren(id: Long)
+GET   /board/edit/:id             controllers.BoardNotices.bearbeiten(id: Long)
+
+GET     /board/:typ/:num            controllers.BoardNotices.showNotices(typ:models.NoticeTyp, num: Integer)
+POST    /board/tagSearch            controllers.BoardNotices.tagSearch()
+POST    /board/tagFindOrCreate      controllers.BoardNotices.tagFindeOrCreate()
+POST    /board/tagCreate            controllers.BoardNotices.tagCreate()
+#GET     /board/:typ/:num           controllers.BoardNotices.showNotices(typ:models.NoticeTyp, num: Integer)
+
+GET     /board/anbietenform         controllers.BoardNotices.anbieten()
+POST    /board/anbietenform         controllers.BoardNotices.anbietenVerarbeiteForm()
+GET     /board/suchenform           controllers.BoardNotices.suchen()
+POST    /board/suchenform           controllers.BoardNotices.suchenVerarbeiteForm()
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/javascripts/routes  controllers.Application.javascriptRoutes()
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Login page
+GET     /login                      securesocial.controllers.LoginPage.login
+GET     /logout                     securesocial.controllers.LoginPage.logout
+
+# User Registration and password handling
+GET     /signup                     securesocial.controllers.Registration.startSignUp
+POST    /signup                     securesocial.controllers.Registration.handleStartSignUp
+GET     /signup/:token              securesocial.controllers.Registration.signUp(token)
+POST    /signup/:token              securesocial.controllers.Registration.handleSignUp(token)
+GET     /reset                      securesocial.controllers.Registration.startResetPassword
+POST    /reset                      securesocial.controllers.Registration.handleStartResetPassword
+GET     /reset/:token               securesocial.controllers.Registration.resetPassword(token)
+POST    /reset/:token               securesocial.controllers.Registration.handleResetPassword(token)
+GET     /password                   securesocial.controllers.PasswordChange.page
+POST    /password                   securesocial.controllers.PasswordChange.handlePasswordChange
+
+# Providers entry points
+GET     /authenticate/:provider     securesocial.controllers.ProviderController.authenticate(provider)
+POST    /authenticate/:provider     securesocial.controllers.ProviderController.authenticateByPost(provider)
+GET     /not-authorized             securesocial.controllers.ProviderController.notAuthorized
